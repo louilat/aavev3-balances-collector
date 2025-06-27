@@ -21,6 +21,7 @@ func main() {
 	accessKeyID := os.Getenv("ACCESS_KEY_ID")
 	secretAccessKey := os.Getenv("SECRET_ACCESS_KEY")
 	provider := os.Getenv("PROVIDER")
+	UIPoolDataProviderAddress := os.Getenv("POOL_DATA_PROVIDER")
 
 	startDate, err := time.Parse("2006-01-02", start)
 	if err != nil {
@@ -32,14 +33,14 @@ func main() {
 	}
 
 	for day := startDate; day.Before(stopDate); day = day.AddDate(0, 0, 1) {
-		err := DailyEtl(day, accessKeyID, secretAccessKey, provider)
+		err := DailyEtl(day, UIPoolDataProviderAddress, accessKeyID, secretAccessKey, provider)
 		if err != nil {
 			panic(err)
 		}
 	}
 }
 
-func DailyEtl(day time.Time, accessKeyID, secretAccessKey, provider string) error {
+func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAccessKey, provider string) error {
 	fmt.Printf("Starting job for day %v\n", day)
 
 	endpoint := "minio-simple.lab.groupe-genes.fr"
@@ -95,7 +96,7 @@ func DailyEtl(day time.Time, accessKeyID, secretAccessKey, provider string) erro
 	}
 
 	fmt.Println("STEP 7 - Collecting users balances...")
-	dataProvAddress := common.HexToAddress("0x3F78BBD206e4D3c504Eb854232EdA7e47E9Fd8FC")
+	dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
 	dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
 	if err != nil {
 		return err

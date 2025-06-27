@@ -1,2 +1,4 @@
 *.exe
 *.ipynb
+deployment/
+deployment/job.yaml

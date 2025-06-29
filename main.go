@@ -45,7 +45,7 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 	endpoint := "minio-simple.lab.groupe-genes.fr"
 	bucket := "projet-datalab-group-jprat"
 	day_str := fmt.Sprint(day)[:10]
-	input_path := "aavev3-raw-datasource/daily-decoded-events/decoded_events_snapshot_date=" + day_str + "/all_active_users.json"
+	// input_path := "aavev3-raw-datasource/daily-decoded-events/decoded_events_snapshot_date=" + day_str + "/all_active_users.json"
 	output_path := "aavev3-raw-datasource/daily-users-balances/users_balances_snapshot_date=" + day_str + "/"
 
 	fmt.Println("STEP 1 - Connecting to provider...")
@@ -60,11 +60,11 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 		panic(err)
 	}
 
-	fmt.Println("STEP 3 - Extracting users to query...")
-	users, err := datalab.ReadActiveUsers(endpoint, bucket, input_path, accessKeyID, secretAccessKey)
-	if err != nil {
-		panic(err)
-	}
+	// fmt.Println("STEP 3 - Extracting users to query...")
+	// users, err := datalab.ReadActiveUsers(endpoint, bucket, input_path, accessKeyID, secretAccessKey)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	fmt.Println("STEP 4 - Finding end block of the day...")
 	// Finding block of the end of the day
@@ -94,7 +94,7 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 		return err
 	}
 
-	fmt.Println("STEP 7 - Collecting users balances...")
+	// fmt.Println("STEP 7 - Collecting users balances...")
 	// dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
 	// dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
 	// if err != nil {
@@ -114,14 +114,14 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 	// 	return err
 	// }
 
-	usersBalances, err := balances.CollectAllUsersBalancesManual(users, poolCtr, tokens, endDayBlock)
-	if err != nil {
-		return err
-	}
+	// usersBalances, err := balances.CollectAllUsersBalancesManual(users, poolCtr, tokens, endDayBlock)
+	// if err != nil {
+	// 	return err
+	// }
 
 	fmt.Println("STEP 8 - Generating and saving outputs...")
 	datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, reservesData, bucket, output_path+"reserves_data.json")
-	datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, usersBalances, bucket, output_path+"active_users_balances.json")
+	// datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, usersBalances, bucket, output_path+"active_users_balances.json")
 	fmt.Println("Done!")
 	return nil
 }

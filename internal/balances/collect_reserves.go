@@ -86,7 +86,7 @@ func CollectReservesData(pool *pool.Pool, tokens []AaveToken, blockNumber *big.I
 			UnderlyingTokenPriceUSD:  token.UnderlyingTokenPriceUSD,
 			ScaledTotalLiquidity:     token.ScaledTotalLiquidity,
 			ScaledTotalVariableDebt:  token.ScaledTotalVariableDebt,
-			ScaledAvailableLiquidity: token.ScaledAvailableLiquidity,
+			ScaledAvailableLiquidity: token.AvailableLiquidity,
 			TreasuryAmount:           token.TreasuryAmount,
 
 			Configuration:               data.Configuration.Data,

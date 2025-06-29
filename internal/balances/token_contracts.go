@@ -14,16 +14,16 @@ import (
 )
 
 type AaveToken struct {
-	Name                     string
-	UnderlyingAsset          string
-	Decimals                 uint8
-	aTokenContract           *aavetoken.Aavetoken
-	vTokenContract           *aavetoken.Aavetoken
-	UnderlyingTokenPriceUSD  *big.Int
-	ScaledTotalLiquidity     *big.Int
-	ScaledTotalVariableDebt  *big.Int
-	ScaledAvailableLiquidity *big.Int
-	TreasuryAmount           *big.Int
+	Name                    string
+	UnderlyingAsset         string
+	Decimals                uint8
+	aTokenContract          *aavetoken.Aavetoken
+	vTokenContract          *aavetoken.Aavetoken
+	UnderlyingTokenPriceUSD *big.Int
+	ScaledTotalLiquidity    *big.Int
+	ScaledTotalVariableDebt *big.Int
+	AvailableLiquidity      *big.Int
+	TreasuryAmount          *big.Int
 }
 
 func CollectAaveTokens(client *ethclient.Client, pool *pool.Pool, blockNumber *big.Int) ([]AaveToken, error) {
@@ -77,7 +77,7 @@ func CollectAaveTokens(client *ethclient.Client, pool *pool.Pool, blockNumber *b
 		if err != nil {
 			return make([]AaveToken, 0), err
 		}
-		scaledAvailableLiquidity, err := underlyingCtr.BalanceOf(&bind.CallOpts{BlockNumber: blockNumber}, aTokenAddress)
+		availableLiquidity, err := underlyingCtr.BalanceOf(&bind.CallOpts{BlockNumber: blockNumber}, aTokenAddress)
 		if err != nil {
 			return make([]AaveToken, 0), err
 		}
@@ -95,16 +95,16 @@ func CollectAaveTokens(client *ethclient.Client, pool *pool.Pool, blockNumber *b
 			return make([]AaveToken, 0), err
 		}
 		allAaveTokens = append(allAaveTokens, AaveToken{
-			Name:                     name,
-			UnderlyingAsset:          reserve.String(),
-			Decimals:                 decimals,
-			aTokenContract:           aTokenCtr,
-			vTokenContract:           vTokenCtr,
-			UnderlyingTokenPriceUSD:  new(big.Int).Set(tokenPriceUSD),
-			ScaledTotalLiquidity:     new(big.Int).Set(scaledTotalLiquidity),
-			ScaledTotalVariableDebt:  new(big.Int).Set(scaledTotalVariableDebt),
-			ScaledAvailableLiquidity: new(big.Int).Set(scaledAvailableLiquidity),
-			TreasuryAmount:           new(big.Int).Set(treasury),
+			Name:                    name,
+			UnderlyingAsset:         reserve.String(),
+			Decimals:                decimals,
+			aTokenContract:          aTokenCtr,
+			vTokenContract:          vTokenCtr,
+			UnderlyingTokenPriceUSD: new(big.Int).Set(tokenPriceUSD),
+			ScaledTotalLiquidity:    new(big.Int).Set(scaledTotalLiquidity),
+			ScaledTotalVariableDebt: new(big.Int).Set(scaledTotalVariableDebt),
+			AvailableLiquidity:      new(big.Int).Set(availableLiquidity),
+			TreasuryAmount:          new(big.Int).Set(treasury),
 		})
 		fmt.Println("   Done!")
 	}

@@ -11,12 +11,15 @@ import (
 )
 
 type ReserveData struct {
-	BlockNumber             *big.Int `json:"blockNumber"`
-	Name                    string   `json:"name"`
-	UnderlyingAsset         string   `json:"underlyingAsset"`
-	Decimals                uint8    `json:"decimals"`
-	UnderlyingTokenPriceUSD *big.Int `json:"underlyingTokenPriceUSD"`
-	TreasuryAmount          *big.Int `json:"treasuryAmount"`
+	BlockNumber              *big.Int `json:"blockNumber"`
+	Name                     string   `json:"name"`
+	UnderlyingAsset          string   `json:"underlyingAsset"`
+	Decimals                 uint8    `json:"decimals"`
+	UnderlyingTokenPriceUSD  *big.Int `json:"underlyingTokenPriceUSD"`
+	ScaledTotalLiquidity     *big.Int `json:"scaledTotalLiquidity"`
+	ScaledTotalVariableDebt  *big.Int `json:"scaledTotalVariableDebt"`
+	ScaledAvailableLiquidity *big.Int `json:"scaledAvailableLiquidity"`
+	TreasuryAmount           *big.Int `json:"treasuryAmount"`
 
 	Configuration               *big.Int       `json:"configuration"`
 	LiquidityIndex              *big.Int       `json:"liquidityIndex"`
@@ -76,12 +79,15 @@ func CollectReservesData(pool *pool.Pool, tokens []AaveToken, blockNumber *big.I
 		}
 
 		allReservesData = append(allReservesData, ReserveData{
-			BlockNumber:             blockNumber,
-			Name:                    token.Name,
-			UnderlyingAsset:         token.UnderlyingAsset,
-			Decimals:                token.Decimals,
-			UnderlyingTokenPriceUSD: token.UnderlyingTokenPriceUSD,
-			TreasuryAmount:          token.TreasuryAmount,
+			BlockNumber:              blockNumber,
+			Name:                     token.Name,
+			UnderlyingAsset:          token.UnderlyingAsset,
+			Decimals:                 token.Decimals,
+			UnderlyingTokenPriceUSD:  token.UnderlyingTokenPriceUSD,
+			ScaledTotalLiquidity:     token.ScaledTotalLiquidity,
+			ScaledTotalVariableDebt:  token.ScaledTotalVariableDebt,
+			ScaledAvailableLiquidity: token.ScaledAvailableLiquidity,
+			TreasuryAmount:           token.TreasuryAmount,
 
 			Configuration:               data.Configuration.Data,
 			LiquidityIndex:              data.LiquidityIndex,

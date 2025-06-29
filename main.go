@@ -4,7 +4,6 @@ import (
 	"aavev3-raw-balances-collector/internal/balances"
 	"aavev3-raw-balances-collector/internal/blockfinder"
 	"aavev3-raw-balances-collector/internal/datalab"
-	"aavev3-raw-balances-collector/internal/dataprovider"
 	"aavev3-raw-balances-collector/internal/pool"
 	"aavev3-raw-balances-collector/internal/utils"
 	"fmt"
@@ -96,15 +95,15 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 	}
 
 	fmt.Println("STEP 7 - Collecting users balances...")
-	dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
-	dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
-	if err != nil {
-		return err
-	}
-	usersBalances, err := balances.CollectAllUsersBalances(users, poolCtr, dataProviderCtr, tokens, endDayBlock)
-	if err != nil {
-		return err
-	}
+	// dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
+	// dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
+	// if err != nil {
+	// 	return err
+	// }
+	// usersBalances, err := balances.CollectAllUsersBalances(users, poolCtr, dataProviderCtr, tokens, endDayBlock)
+	// if err != nil {
+	// 	return err
+	// }
 
 	// dataProviderCtr, err := prevdataprovider.NewPrevdataprovider(dataProvAddress, client)
 	// if err != nil {
@@ -114,6 +113,11 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 	// if err != nil {
 	// 	return err
 	// }
+
+	usersBalances, err := balances.CollectAllUsersBalancesManual(users, poolCtr, tokens, endDayBlock)
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("STEP 8 - Generating and saving outputs...")
 	datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, reservesData, bucket, output_path+"reserves_data.json")

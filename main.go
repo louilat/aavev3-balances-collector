@@ -4,6 +4,7 @@ import (
 	"aavev3-raw-balances-collector/internal/balances"
 	"aavev3-raw-balances-collector/internal/blockfinder"
 	"aavev3-raw-balances-collector/internal/datalab"
+	"aavev3-raw-balances-collector/internal/dataprovider"
 	"aavev3-raw-balances-collector/internal/pool"
 	"aavev3-raw-balances-collector/internal/utils"
 	"fmt"
@@ -45,7 +46,7 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 	endpoint := "minio-simple.lab.groupe-genes.fr"
 	bucket := "projet-datalab-group-jprat"
 	day_str := fmt.Sprint(day)[:10]
-	// input_path := "aavev3-raw-datasource/daily-decoded-events/decoded_events_snapshot_date=" + day_str + "/all_active_users.json"
+	input_path := "aavev3-raw-datasource/daily-decoded-events/decoded_events_snapshot_date=" + day_str + "/all_active_users.json"
 	output_path := "aavev3-raw-datasource/daily-users-balances/users_balances_snapshot_date=" + day_str + "/"
 
 	fmt.Println("STEP 1 - Connecting to provider...")
@@ -60,11 +61,11 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 		panic(err)
 	}
 
-	// fmt.Println("STEP 3 - Extracting users to query...")
-	// users, err := datalab.ReadActiveUsers(endpoint, bucket, input_path, accessKeyID, secretAccessKey)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	fmt.Println("STEP 3 - Extracting users to query...")
+	users, err := datalab.ReadActiveUsers(endpoint, bucket, input_path, accessKeyID, secretAccessKey)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println("STEP 4 - Finding end block of the day...")
 	// Finding block of the end of the day
@@ -94,16 +95,16 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 		return err
 	}
 
-	// fmt.Println("STEP 7 - Collecting users balances...")
-	// dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
-	// dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
-	// if err != nil {
-	// 	return err
-	// }
-	// usersBalances, err := balances.CollectAllUsersBalances(users, poolCtr, dataProviderCtr, tokens, endDayBlock)
-	// if err != nil {
-	// 	return err
-	// }
+	fmt.Println("STEP 7 - Collecting users balances...")
+	dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
+	dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
+	if err != nil {
+		return err
+	}
+	usersBalances, err := balances.CollectAllUsersBalances(users, poolCtr, dataProviderCtr, tokens, endDayBlock)
+	if err != nil {
+		return err
+	}
 
 	// dataProviderCtr, err := prevdataprovider.NewPrevdataprovider(dataProvAddress, client)
 	// if err != nil {
@@ -121,7 +122,7 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 
 	fmt.Println("STEP 8 - Generating and saving outputs...")
 	datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, reservesData, bucket, output_path+"reserves_data.json")
-	// datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, usersBalances, bucket, output_path+"active_users_balances.json")
+	datalab.SaveRecords(endpoint, accessKeyID, secretAccessKey, usersBalances, bucket, output_path+"active_users_balances.json")
 	fmt.Println("Done!")
 	return nil
 }

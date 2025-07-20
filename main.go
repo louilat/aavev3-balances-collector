@@ -96,6 +96,8 @@ func DailyEtl(day time.Time, UIPoolDataProviderAddress, accessKeyID, secretAcces
 	}
 
 	fmt.Println("STEP 7 - Collecting users balances...")
+	fmt.Printf("   INFO: Data Provider Contract is: %v\n", UIPoolDataProviderAddress)
+
 	dataProvAddress := common.HexToAddress(UIPoolDataProviderAddress)
 	dataProviderCtr, err := dataprovider.NewDataprovider(dataProvAddress, client)
 	if err != nil {

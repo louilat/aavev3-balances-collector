@@ -51,7 +51,7 @@ func CollectReservesData(pool *pool.Pool, tokens []AaveToken, blockNumber *big.I
 	allReservesData := make([]ReserveData, 0)
 	for _, token := range tokens {
 		fmt.Println(token.UnderlyingAsset)
-		data, err := pool.GetReserveData(&bind.CallOpts{}, common.HexToAddress(token.UnderlyingAsset))
+		data, err := pool.GetReserveData(&bind.CallOpts{BlockNumber: blockNumber}, common.HexToAddress(token.UnderlyingAsset))
 		if err != nil {
 			return make([]ReserveData, 0), err
 		}

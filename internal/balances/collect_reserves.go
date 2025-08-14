@@ -56,6 +56,8 @@ func CollectReservesData(pool *pool.Pool, tokens []AaveToken, blockNumber *big.I
 			return make([]ReserveData, 0), err
 		}
 		binString := fmt.Sprintf("%b", data.Configuration.Data)
+		println(binString)
+		println(len(binString))
 
 		var ltv, lt, lb, reserveFactor, borrowCap, supplyCap, liquidationProtocolFee, eModeCategory int64
 		if token.UnderlyingAsset != "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f" {
@@ -64,9 +66,21 @@ func CollectReservesData(pool *pool.Pool, tokens []AaveToken, blockNumber *big.I
 			lb, _ = strconv.ParseInt(binString[len(binString)-47:len(binString)-32], 2, 64)
 			reserveFactor, _ = strconv.ParseInt(binString[len(binString)-79:len(binString)-64], 2, 64)
 			borrowCap, _ = strconv.ParseInt(binString[len(binString)-115:len(binString)-80], 2, 64)
-			supplyCap, _ = strconv.ParseInt(binString[len(binString)-151:len(binString)-116], 2, 64)
-			liquidationProtocolFee, _ = strconv.ParseInt(binString[len(binString)-167:len(binString)-152], 2, 64)
-			eModeCategory, _ = strconv.ParseInt(binString[len(binString)-175:len(binString)-168], 2, 64)
+			if len(binString) >= 151 {
+				supplyCap, _ = strconv.ParseInt(binString[len(binString)-151:len(binString)-116], 2, 64)
+			} else {
+				supplyCap = 0
+			}
+			if len(binString) >= 167 {
+				liquidationProtocolFee, _ = strconv.ParseInt(binString[len(binString)-167:len(binString)-152], 2, 64)
+			} else {
+				liquidationProtocolFee = 0
+			}
+			if len(binString) >= 175 {
+				eModeCategory, _ = strconv.ParseInt(binString[len(binString)-175:len(binString)-168], 2, 64)
+			} else {
+				eModeCategory = 0
+			}
 		} else {
 			ltv = 0
 			lt = 0

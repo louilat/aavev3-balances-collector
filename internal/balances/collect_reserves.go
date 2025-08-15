@@ -56,8 +56,6 @@ func CollectReservesData(pool *pool.Pool, tokens []AaveToken, blockNumber *big.I
 			return make([]ReserveData, 0), err
 		}
 		binString := fmt.Sprintf("%b", data.Configuration.Data)
-		println(binString)
-		println(len(binString))
 
 		var ltv, lt, lb, reserveFactor, borrowCap, supplyCap, liquidationProtocolFee, eModeCategory int64
 		if token.UnderlyingAsset != "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f" {

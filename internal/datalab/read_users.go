@@ -8,7 +8,7 @@ import (
 )
 
 func ReadActiveUsers(endpoint, bucket, key, accessKeyID, secretAccessKey string) ([]string, error) {
-	useSSL := false
+	useSSL := true
 
 	minioClient, err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
 	if err != nil {

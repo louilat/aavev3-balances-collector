@@ -16,27 +16,33 @@ import (
 )
 
 func main() {
-	start := os.Getenv("START_DATE")
-	stop := os.Getenv("END_DATE")
+	// start := os.Getenv("START_DATE")
+	// stop := os.Getenv("END_DATE")
 	accessKeyID := os.Getenv("ACCESS_KEY_ID")
 	secretAccessKey := os.Getenv("SECRET_ACCESS_KEY")
 	provider := os.Getenv("PROVIDER")
 	UIPoolDataProviderAddress := os.Getenv("POOL_DATA_PROVIDER")
 
-	startDate, err := time.Parse("2006-01-02", start)
-	if err != nil {
-		panic(err)
-	}
-	stopDate, err := time.Parse("2006-01-02", stop)
-	if err != nil {
-		panic(err)
-	}
+	// startDate, err := time.Parse("2006-01-02", start)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// stopDate, err := time.Parse("2006-01-02", stop)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	for day := startDate; day.Before(stopDate); day = day.AddDate(0, 0, 1) {
-		err := DailyEtl(day, UIPoolDataProviderAddress, accessKeyID, secretAccessKey, provider)
-		if err != nil {
-			panic(err)
-		}
+	// for day := startDate; day.Before(stopDate); day = day.AddDate(0, 0, 1) {
+	// 	err := DailyEtl(day, UIPoolDataProviderAddress, accessKeyID, secretAccessKey, provider)
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// }
+	ref := time.Now().UTC().AddDate(0, 0, -21)
+	snapshotDay := time.Date(ref.Year(), ref.Month(), ref.Day(), 0, 0, 0, 0, time.UTC)
+	err := DailyEtl(snapshotDay, UIPoolDataProviderAddress, accessKeyID, secretAccessKey, provider)
+	if err != nil {
+		panic(err)
 	}
 }
 
